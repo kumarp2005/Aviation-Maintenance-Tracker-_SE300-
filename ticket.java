@@ -2,6 +2,8 @@
 public class ticket {
 
     private boolean resolveStatus;
+    private double ticketNumber;
+    private boolean criticalStatus;
     private double date;
     private String tailNumber;
     private String problem;
@@ -10,6 +12,14 @@ public class ticket {
     public void updateStatus(boolean status){
         resolveStatus = status;
     } 
+
+    public void setTicketNumber(double num){
+        ticketNumber = num;
+    }
+
+    public void criticalStatus(boolean isCritical){
+        criticalStatus = isCritical;
+    }
 
     public void setDate(double newDate){
         date = newDate;
@@ -30,6 +40,16 @@ public class ticket {
     public boolean getStatus(){
         boolean status = resolveStatus;
         return status;
+    }
+
+    public double getTicketNumber(){
+        double tickNum = ticketNumber;
+        return tickNum;
+    }
+
+    public boolean getCriticalStatus(){
+        boolean isCritical = criticalStatus;
+        return isCritical;
     }
     
     public double getDate(){
