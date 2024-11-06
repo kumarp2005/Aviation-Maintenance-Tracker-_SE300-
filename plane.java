@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 public class plane {
 
 private ArrayList<ticket> tickets = new ArrayList<ticket>();
@@ -24,7 +23,11 @@ public void editTailNumber(String newTail){
     tailNumber = newTail;
 }
 
-//public ArrayList[ticket] getTickets(){}
+public ArrayList<ticket> getTickets(){
+    ArrayList<ticket> tks = tickets;
+
+    return tks;
+}
 
 public String getTailNumber(){
     String tailNum = tailNumber;
@@ -36,7 +39,10 @@ public double getFlightHours(){
     return hours;
 }
 
-//public ArrayList<String> getParts(){}
+public ArrayList<String> getParts(){
+    ArrayList<String> allParts = parts;
+    return allParts;
+}
 
 
 }

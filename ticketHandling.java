@@ -1,4 +1,4 @@
-public class ticketHandling {
+ public class ticketHandling {
     private ticket planeTicket;
     private double ticketNumbers;
 
