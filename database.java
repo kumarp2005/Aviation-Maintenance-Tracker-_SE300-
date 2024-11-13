@@ -41,7 +41,16 @@ public plane searchByTicket(ticket tk){
     return null;
 }
 
+public ArrayList<ticket> searchPlane(plane pl){
 
+    String tailNumber = pl.getTailNumber();
+    
+    plane foundPlane = searchByTail(tailNumber);
+
+    ArrayList<ticket> tickets = foundPlane.getTickets();
+
+    return tickets;
+}
 
 }
 
