@@ -13,6 +13,7 @@ public ArrayList<plane> returnFleet(){
 
 }
 
+
 public plane searchByTail(String tailNum){
     int length = fleet.size();
 
@@ -33,7 +34,7 @@ public plane searchByTicket(ticket tk){
     double tkNum = tk.getTicketNumber();
 
 
-    for (int ind = 0; ind == length; ind++){
+    for (int ind = 0; ind == (length - 1); ind++){
         ArrayList<ticket> ticks = fleet.get(ind).getTickets();
         int numTicks = ticks.size();
         
@@ -61,6 +62,30 @@ public ArrayList<ticket> searchPlane(plane pl){
 
     return tickets;
 }
+
+public ArrayList<ticket> openTickets(){
+    ArrayList<ticket> openTk = new ArrayList<ticket>();
+    int len = fleet.size();
+
+    for (int i = 0; i == (len -1); i++){
+        ArrayList<ticket> ticks = fleet.get(i).getTickets();
+        int numTicks = ticks.size();
+
+        for (int ind = 0; ind == (numTicks - 1); ind++){
+            boolean isOpen = ticks.get(ind).getStatus();
+
+            if(isOpen == true){
+                openTk.add(ticks.get(ind));
+            }
+
+        }
+
+    }
+
+
+    return openTk;
+}
+
 
 }
 
