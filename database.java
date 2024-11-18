@@ -3,6 +3,16 @@ public class database{
 
 private ArrayList<plane> fleet = new ArrayList<plane>();
 
+public void addPlane(plane pl){
+    fleet.add(pl);
+}
+
+public ArrayList<plane> returnFleet(){
+    ArrayList<plane> planes = fleet;
+    return planes;
+
+}
+
 public plane searchByTail(String tailNum){
     int length = fleet.size();
 
