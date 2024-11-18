@@ -7,13 +7,17 @@ private String tailNumber;
 private double flightHours;
 private ArrayList<String> parts = new ArrayList<String>();
 
-//public void addTicket(ticket){}
+public void addTicket(ticket tck){
+    tickets.add(tck);
+}
 
 public void editModel(String newModel){
     model = newModel;
 }
 
-public void addPart(String newPart){}
+public void addPart(String newPart){
+    parts.add(newPart);
+}
 
 public void addFlightHours(double newHours){
     flightHours = flightHours + newHours;
