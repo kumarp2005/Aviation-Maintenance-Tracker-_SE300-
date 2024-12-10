@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aircraft Maintenance System</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .menu-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .menu-button:hover {
+            background-color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aircraft Maintenance System</h1>
+        <a href="/aircraft" class="menu-button">View Aircraft</a>
+        <a href="/tickets" class="menu-button">View All Tickets</a>
+        <a href="/open-tickets" class="menu-button">View Open Tickets</a>
+        <a href="/create-ticket" class="menu-button">Create New Ticket</a>
+    </div>
+</body>
+</html>

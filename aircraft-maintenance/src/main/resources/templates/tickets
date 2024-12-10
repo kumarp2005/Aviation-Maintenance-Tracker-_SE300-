@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Tickets</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .home-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .ticket-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .critical {
+            border-left: 4px solid red;
+        }
+        .status-open {
+            color: green;
+            font-weight: bold;
+        }
+        .status-closed {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="home-button">Back to Home</a>
+        <h1>All Maintenance Tickets</h1>
+        <div id="tickets-list">
+            Loading tickets...
+        </div>
+    </div>
+
+    <script>
+        fetch('/api/tickets')
+            .then(response => response.json())
+            .then(tickets => {
+                const list = document.getElementById('tickets-list');
+                if (tickets.length === 0) {
+                    list.innerHTML = 'No tickets found';
+                    return;
+                }
+                list.innerHTML = tickets.map(ticket => `
+                    <div class="ticket-card ${ticket.criticalStatus ? 'critical' : ''}">
+                        <h3>Ticket #${ticket.ticketNumber}</h3>
+                        <p>Aircraft: ${ticket.tailNumber}</p>
+                        <p>Status: <span class="${ticket.status ? 'status-open' : 'status-closed'}">
+                            ${ticket.status ? 'Open' : 'Closed'}
+                        </span></p>
+                        <p>Critical: ${ticket.criticalStatus ? 'Yes' : 'No'}</p>
+                        <p>Problem: ${ticket.problem}</p>
+                        <p>Description: ${ticket.description}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('tickets-list').innerHTML = 'Error loading ticket data';
+            });
+    </script>
+</body>
+</html>

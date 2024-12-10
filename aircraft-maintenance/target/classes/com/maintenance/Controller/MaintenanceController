@@ -1,0 +1,76 @@
+package com.maintenance.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import com.maintenance.model.*;
+import com.maintenance.service.*;
+import java.util.*;
+
+@Controller
+public class MaintenanceController {
+    private final database fleetDatabase;
+
+    public MaintenanceController() {
+        this.fleetDatabase = new database();
+    }
+
+    // Page routes
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+
+    @GetMapping("/aircraft")
+    public String aircraft() {
+        return "aircraft";
+    }
+
+    @GetMapping("/tickets")
+    public String tickets() {
+        return "tickets";
+    }
+
+    @GetMapping("/open-tickets")
+    public String openTickets() {
+        return "open-tickets";
+    }
+
+    @GetMapping("/create-ticket")
+    public String createTicket() {
+        return "create-ticket";
+    }
+
+    // API endpoints
+    @GetMapping("/api/aircraft")
+    @ResponseBody
+    public List<plane> getAllAircraft() {
+        return fleetDatabase.returnFleet();
+    }
+
+    @GetMapping("/api/tickets")
+    @ResponseBody
+    public List<ticket> getAllTickets() {
+        return fleetDatabase.getAllTickets();
+    }
+
+    @GetMapping("/api/tickets/open")
+    @ResponseBody
+    public List<ticket> getOpenTickets() {
+        return fleetDatabase.openTickets();
+    }
+
+    @PostMapping("/api/tickets")
+    @ResponseBody
+    public ticket createTicket(@RequestBody Map<String, Object> request) {
+        ticket newTicket = new ticket();
+        newTicket.setTailNumber((String) request.get("tailNumber"));
+        newTicket.criticalStatus((Boolean) request.get("critical"));
+        newTicket.addProblem((String) request.get("problem"));
+        newTicket.addDescription((String) request.get("description"));
+        newTicket.setTicketNumber(fleetDatabase.getNextTicketNumber());
+        newTicket.updateStatus(true);
+
+        fleetDatabase.addNewTicket(newTicket);
+        return newTicket;
+    }
+}

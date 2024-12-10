@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aircraft List</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .home-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="home-button">Back to Home</a>
+        <h1>Aircraft List</h1>
+        <div id="aircraft-list">
+            Loading aircraft data...
+        </div>
+    </div>
+
+    <script>
+        fetch('/api/aircraft')
+            .then(response => response.json())
+            .then(aircraft => {
+                const list = document.getElementById('aircraft-list');
+                list.innerHTML = aircraft.map(plane => `
+                    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+                        <h3>Tail #: ${plane.tailNumber}</h3>
+                        <p>Model: ${plane.model}</p>
+                        <p>Flight Hours: ${plane.flightHours}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('aircraft-list').innerHTML = 'Error loading aircraft data';
+            });
+    </script>
+</body>
+</html>

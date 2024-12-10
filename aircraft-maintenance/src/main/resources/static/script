@@ -1,0 +1,156 @@
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded');
+    initializeTabButtons();
+    loadAircraft(); // Load initial data
+});
+
+function initializeTabButtons() {
+    console.log('Initializing tab buttons');
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            showTab(tabName);
+        });
+    });
+}
+
+function showTab(tabName) {
+    console.log('Showing tab:', tabName);
+    
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.style.display = 'none';
+        tab.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Show selected tab
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+        selectedTab.style.display = 'block';
+        selectedTab.classList.add('active');
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    }
+
+    // Load data based on tab
+    switch(tabName) {
+        case 'aircraft':
+            loadAircraft();
+            break;
+        case 'tickets':
+            loadAllTickets();
+            break;
+        case 'open-tickets':
+            loadOpenTickets();
+            break;
+    }
+}
+
+async function loadAircraft() {
+    console.log('Loading aircraft data');
+    const container = document.getElementById('aircraft-list');
+    try {
+        const response = await fetch('/api/aircraft');
+        const aircraft = await response.json();
+        
+        if (aircraft.length === 0) {
+            container.innerHTML = '<p>No aircraft found</p>';
+            return;
+        }
+
+        container.innerHTML = aircraft.map(plane => `
+            <div class="aircraft-card">
+                <h3>Tail #: ${plane.tailNumber}</h3>
+                <p>Model: ${plane.model}</p>
+                <p>Flight Hours: ${plane.flightHours}</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading aircraft:', error);
+        container.innerHTML = '<p>Error loading aircraft data</p>';
+    }
+}
+
+async function loadAllTickets() {
+    console.log('Loading all tickets');
+    const container = document.getElementById('ticket-list');
+    try {
+        const response = await fetch('/api/tickets');
+        const tickets = await response.json();
+        displayTickets(container, tickets);
+    } catch (error) {
+        console.error('Error loading tickets:', error);
+        container.innerHTML = '<p>Error loading tickets</p>';
+    }
+}
+
+async function loadOpenTickets() {
+    console.log('Loading open tickets');
+    const container = document.getElementById('open-ticket-list');
+    try {
+        const response = await fetch('/api/tickets/open');
+        const tickets = await response.json();
+        displayTickets(container, tickets);
+    } catch (error) {
+        console.error('Error loading open tickets:', error);
+        container.innerHTML = '<p>Error loading open tickets</p>';
+    }
+}
+
+function displayTickets(container, tickets) {
+    if (!tickets || tickets.length === 0) {
+        container.innerHTML = '<p>No tickets found</p>';
+        return;
+    }
+
+    container.innerHTML = tickets.map(ticket => `
+        <div class="ticket-card ${ticket.criticalStatus ? 'critical' : ''}">
+            <h3>Ticket #${ticket.ticketNumber}</h3>
+            <p>Aircraft: ${ticket.tailNumber}</p>
+            <p>Status: <span class="${ticket.status ? 'status-open' : 'status-closed'}">
+                ${ticket.status ? 'Open' : 'Closed'}
+            </span></p>
+            <p>Critical: ${ticket.criticalStatus ? 'Yes' : 'No'}</p>
+            <p>Part: ${ticket.problem}</p>
+            <p>Description: ${ticket.description}</p>
+        </div>
+    `).join('');
+}
+
+// Set up form submission
+document.getElementById('ticket-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    console.log('Submitting new ticket');
+
+    const newTicket = {
+        tailNumber: document.getElementById('tail-number').value,
+        critical: document.getElementById('critical').checked,
+        problem: document.getElementById('part').value,
+        description: document.getElementById('description').value
+    };
+
+    try {
+        const response = await fetch('/api/tickets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTicket)
+        });
+
+        if (response.ok) {
+            alert('Ticket created successfully!');
+            document.getElementById('ticket-form').reset();
+            showTab('open-tickets');
+        } else {
+            alert('Error creating ticket');
+        }
+    } catch (error) {
+        console.error('Error creating ticket:', error);
+        alert('Error creating ticket: ' + error.message);
+    }
+});
